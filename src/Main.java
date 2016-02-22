@@ -62,31 +62,25 @@ public class Main {
         }
 
         private Node find(Node v) {
-            if (v.parent != v) {
-                v.parent = find(v.parent);
+            if (v.parent == v) {
+                return v;
+            } else {
+                return find(v.parent);
             }
-            return v.parent;
         }
 
         private boolean union(Node a, Node b) {
             Node aRoot = find(a);
             Node bRoot = find(b);
 
-            if (aRoot == bRoot) {
-                return false;
+            aRoot.parent = bRoot;
+
+            if (aRoot != bRoot) {
+                numOfDisjointSets--;
+                return true;
             }
 
-            if (aRoot.rank < bRoot.rank) {
-                aRoot.parent = bRoot;
-            } else if (aRoot.rank > bRoot.rank) {
-                bRoot.parent = aRoot;
-            } else {
-                bRoot.parent = aRoot;
-                aRoot.rank++;
-            }
-
-            numOfDisjointSets--;
-            return true;
+            return false;
         }
 
         public boolean isConnected() {
