@@ -1,3 +1,6 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 /**
@@ -5,23 +8,25 @@ import java.util.*;
  */
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         new Main().run();
     }
 
-    public void run() {
-        Scanner sc = new Scanner(System.in);
-        int numFarms = sc.nextInt();
-        int numRoads = sc.nextInt();
+    public void run() throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String[] numbers = reader.readLine().split(" ");
+        int numFarms = Integer.parseInt(numbers[0]);
+        int numRoads = Integer.parseInt(numbers[1]);
 
         List<Edge> edges = new ArrayList<Edge>();
         DisjointSet disjointSet = new DisjointSet(numFarms);
 
         // Add each road to the edge set.
         for (int i = 0; i < numRoads; i++) {
-            int sourceFarm = sc.nextInt() - 1; // -1 to make farm indices zero-based
-            int destinationFarm = sc.nextInt() - 1;
-            int length = sc.nextInt();
+            numbers = reader.readLine().split(" ");
+            int sourceFarm = Integer.parseInt(numbers[0]) - 1; // -1 to make farm numbers 0-based.
+            int destinationFarm = Integer.parseInt(numbers[1]) - 1;
+            int length = Integer.parseInt(numbers[2]);
             edges.add(new Edge(sourceFarm, destinationFarm, length));
         }
 
@@ -62,11 +67,11 @@ public class Main {
         }
 
         private Node find(Node v) {
-            if (v.parent == v) {
-                return v;
-            } else {
-                return find(v.parent);
+            if (v.parent != v) {
+                v.parent = find(v.parent);
             }
+
+            return v.parent;
         }
 
         private boolean union(Node a, Node b) {
